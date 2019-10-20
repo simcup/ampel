@@ -16,7 +16,12 @@ const int ROTE_LAMPE = 12;
 const int GELBE_LAMPE = 13;
 const int GRUENE_LAMPE = 14;
 
+
+//credit where credit is due
+//github.com/migu
+//github.com/orithena
 typedef struct Zustand Zustand;
+
 
 struct Zustand {
   bool led_rot;
@@ -53,6 +58,11 @@ void handleNotFound(){
 
 void normal_modus(){
 	//zustände für normal mode initialisieren
+	
+  ampel_rot.next = &ampel_gelbrot;
+  ampel_gelb.next = &ampel_rot;
+  ampel_gruen.next = &ampel_gelb;
+  ampel_gelbrot.next = &ampel_gruen;
 }
 
 void setup() {
@@ -79,11 +89,8 @@ void setup() {
   pinMode(GELBE_LAMPE, OUTPUT);
   pinMode(GRUENE_LAMPE, OUTPUT);
   
-  //zustände zuweisen; TODO: in eigene funktion auslagern
-  ampel_rot.next = &ampel_gelbrot;
-  ampel_gelb.next = &ampel_rot;
-  ampel_gruen.next = &ampel_gelb;
-  ampel_gelbrot.next = &ampel_gruen;
+  //zustände zuweisen
+  normal_modus();
 }
 
 void es_werde_licht(Zustand *zustand){
