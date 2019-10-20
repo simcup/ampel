@@ -34,7 +34,8 @@ Zustand ampel_rot = {true, false, false, NULL, 4000};
 Zustand ampel_gelb = {false, true, false, NULL, 1500};
 Zustand ampel_gruen = {false, false, true, NULL, 4000};
 Zustand ampel_gelbrot = {true, true, false, NULL, 1500};
-Zustand ampel_aus = {false, false, false, NULL, 1500};
+Zustand ampel_aus = {false, false, false, NULL, 1000};
+
 //to be usefull
 Zustand ampel_rotgruen = {true, false, true, NULL, 1000};
 Zustand ampel_gelbgruen = {false, true, true, NULL, 1000};
@@ -48,6 +49,10 @@ void handleRoot(){
 
 void handleNotFound(){
 	server.send(404, "text/plain", "not found");
+}
+
+void normal_modus(){
+	//zustände für normal mode initialisieren
 }
 
 void setup() {
@@ -74,7 +79,7 @@ void setup() {
   pinMode(GELBE_LAMPE, OUTPUT);
   pinMode(GRUENE_LAMPE, OUTPUT);
   
-  //zustände zuweisen 
+  //zustände zuweisen; TODO: in eigene funktion auslagern
   ampel_rot.next = &ampel_gelbrot;
   ampel_gelb.next = &ampel_rot;
   ampel_gruen.next = &ampel_gelb;
