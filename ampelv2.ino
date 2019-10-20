@@ -66,7 +66,7 @@ void setup() {
   Serial.print("conneted to ");
   Serial.println(ssid);
   Serial.print("IP address: ");
-  Serial.println(WiFi.localIP())
+  Serial.println(WiFi.localIP());
   
   
   //pins initialisieren
