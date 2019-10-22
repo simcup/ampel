@@ -9,19 +9,16 @@
 #endif
 
 const char* ssid = STASSID;
-const char* password = STAPSK;
-
+const char* passwort = STAPSK;
 
 const int ROTE_LAMPE = 12;
 const int GELBE_LAMPE = 13;
 const int GRUENE_LAMPE = 14;
 
-
 //credit where credit is due
 //github.com/migu
 //github.com/orithena
 typedef struct Zustand Zustand;
-
 
 struct Zustand {
   bool led_rot;
@@ -73,14 +70,20 @@ void es_werde_licht(Zustand *zustand){
   digitalWrite(ROTE_LAMPE, zustand->led_rot);
   digitalWrite(GELBE_LAMPE, zustand->led_gelb);
   digitalWrite(GRUENE_LAMPE, zustand->led_gruen);
-  delay(zustand->dauer);
+  pause(zustand->dauer);
+}
+
+void pause(uint32_t ms) {
+  //totally not stolen
+  uint32_t wiederbringe_an = millis() + ms;
+  while(millis() < wiederbringe_an) { yield(); }
 }
 
 void setup() {
   // Serial output mit baud rate 115200 initialisieren
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  WiFi.begin(ssid, passwort);
   Serial.println("");
   
   while(WiFi.status() != WL_CONNECTED){
@@ -94,7 +97,6 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
   
-  
   //pins initialisieren
   pinMode(ROTE_LAMPE, OUTPUT);
   pinMode(GELBE_LAMPE, OUTPUT);
@@ -103,7 +105,6 @@ void setup() {
   //zustände zuweisen
   normal_modus();
 }
-
 
 void loop() {
   es_werde_licht(jetzt);
