@@ -73,9 +73,9 @@ void es_werde_licht(Zustand *zustand){
   pause(zustand->dauer);
 }
 
-void pause(uint32_t ms) {
+void pause(unsigned long ms) {
   //totally not stolen
-  uint32_t wiederbringe_an = millis() + ms;
+  unsigned long wiederbringe_an = millis() + ms;
   while(millis() < wiederbringe_an) { yield(); }
 }
 
