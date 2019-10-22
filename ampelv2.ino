@@ -5,7 +5,7 @@
 
 #ifndef STASSID
 #define STASSID "freieslabor"
-#define STAPSK "stehtaufdemzettel"
+#define STAPSK "stehtaufmzettel"
 #endif
 
 const char* ssid = STASSID;
@@ -67,9 +67,9 @@ void es_werde_licht(Zustand *zustand){
 	zustand->led_rot,
 	zustand->led_gelb,
 	zustand->led_gruen); 
-  digitalWrite(ROTE_LAMPE, zustand->led_rot);
-  digitalWrite(GELBE_LAMPE, zustand->led_gelb);
-  digitalWrite(GRUENE_LAMPE, zustand->led_gruen);
+  digitalWrite(ROTE_LAMPE, !zustand->led_rot);
+  digitalWrite(GELBE_LAMPE, !zustand->led_gelb);
+  digitalWrite(GRUENE_LAMPE, !zustand->led_gruen);
   pause(zustand->dauer);
 }
 
@@ -101,7 +101,9 @@ void setup() {
   pinMode(ROTE_LAMPE, OUTPUT);
   pinMode(GELBE_LAMPE, OUTPUT);
   pinMode(GRUENE_LAMPE, OUTPUT);
-  
+  digitalWrite(ROTE_LAMPE, true);
+  digitalWrite(GELBE_LAMPE, true);
+  digitalWrite(GRUENE_LAMPE, true);
   //zustände zuweisen
   normal_modus();
 }

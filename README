@@ -1,6 +1,6 @@
 Huston, wir haben ampel. auf dem ESP8266 im space ist eine funktionierende version die zumindest leds im richtigen muster ansteuert. jemand muesste mal:
 
-- die pins anfänglich high ziehen und dann invertieren, weil das relais board aktive low ist
+- sich mal um den webserverteil kümmern
 - funktionen schreiben die andere modi initialisieren
 - funktionen schreiben die spezifische http-requests handlen und an den server binden
 - ein interface machen das beim abfragen von / ausgegeben wird und dieses bei anfragen nach / ausgeben (siehe handleRoot())
