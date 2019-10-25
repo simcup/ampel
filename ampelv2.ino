@@ -67,9 +67,10 @@ void normal_modus(){
 void es_werde_licht(Zustand *zustand){
   //debug zwecke
   Serial.printf("rot: %d, gelb: %d, gruen: %d\n",
-	zustand->led_rot,
-	zustand->led_gelb,
-	zustand->led_gruen);
+	  zustand->led_rot,
+	  zustand->led_gelb,
+  	zustand->led_gruen
+  );
 
   //die pins dahin ziehen wo sie hinsollen
   digitalWrite(ROTE_LAMPE, !zustand->led_rot);
@@ -83,7 +84,9 @@ void es_werde_licht(Zustand *zustand){
 void pause(unsigned long ms) {
   //Absolut nicht geklaut
   unsigned long wiederbringe_an = millis() + ms;
-  while(millis() < wiederbringe_an) { yield(); }
+  while(millis() < wiederbringe_an) { 
+    yield();
+  }
 }
 
 void setup() {
@@ -95,9 +98,8 @@ void setup() {
   Serial.println("");
   //warten bis verbindung erstellt wurde
   while(WiFi.status() != WL_CONNECTED){
-	delay(500);
-	Serial.print(".");
-
+    delay(500);
+    Serial.print(".");
   }
   Serial.println("");
   Serial.print("conneted to ");
