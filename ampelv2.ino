@@ -110,6 +110,10 @@ void setup() {
   //funktionen an requests binden
   server.on("/", handleRoot);
   server.onNotFound(handleNotFound);
+
+  // starte Webserver (bind TCP)
+  server.begin();
+  Serial.printf("Web server started on %s :", WiFi.localIP().toString().c_str());
 	
   //pins initialisieren
   pinMode(ROTE_LAMPE, OUTPUT);
@@ -125,6 +129,9 @@ void setup() {
 }
 
 void loop() {
+
+  server.handleClient(); // auf neuen HTTP-Request prüfen
+
   es_werde_licht(jetzt);
   jetzt = jetzt->next;
 }
