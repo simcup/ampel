@@ -56,12 +56,25 @@ void handleNotFound(){
 }
 
 void normal_modus(){
-	//zustände für normal mode initialisieren
+	//abfolge für normal mode setzen
 	
   ampel_rot.next = &ampel_gelbrot;
+  ampel_rot.dauer = 4000;
   ampel_gelb.next = &ampel_rot;
+  ampel_gelb.dauer = 1500;
   ampel_gruen.next = &ampel_gelb;
+  ampel_gruen.dauer = 4000;
   ampel_gelbrot.next = &ampel_gruen;
+  ampel_gelbrot.dauer = 1500;
+}
+
+void nacht_modus(){
+	//abfolge und dauer für nacht modus setzen
+	ampel_gelb.next = &ampel_aus;
+	ampel_gelb.dauer = 5000;
+	ampel_aus.next = &ampel_gelb;
+	ampel_aus.dauer = 5000;
+	jetzt = &ampel_gelb;
 }
 
 void es_werde_licht(Zustand *zustand){
@@ -107,16 +120,13 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  server.begin();
-  Serial.printf("Web server started on %s :", WiFi.localIP().toString().c_str());
-
   //funktionen an requests binden
   server.on("/", handleRoot);
   server.onNotFound(handleNotFound);
 
   // starte Webserver (bind TCP)
   server.begin();
-  Serial.printf("Web server started on %s :", WiFi.localIP().toString().c_str());
+  Serial.println("Web server started");
 	
   //pins initialisieren
   pinMode(ROTE_LAMPE, OUTPUT);
@@ -128,7 +138,7 @@ void setup() {
   digitalWrite(GELBE_LAMPE, true);
   digitalWrite(GRUENE_LAMPE, true);
   //zustände zuweisen
-  normal_modus();
+  nacht_modus();
 }
 
 void loop() {
