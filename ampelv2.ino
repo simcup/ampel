@@ -107,6 +107,9 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
+  server.begin();
+  Serial.printf("Web server started on %s :", WiFi.localIP().toString().c_str());
+
   //funktionen an requests binden
   server.on("/", handleRoot);
   server.onNotFound(handleNotFound);
