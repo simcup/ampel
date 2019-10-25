@@ -1,7 +1,6 @@
-Huston, wir haben ampel. auf dem ESP8266 im space ist eine funktionierende version die zumindest leds im richtigen muster ansteuert. jemand muesste mal:
+Huston, wir haben ampel. auf dem ESP8266 im space ist eine funktionierende version die zumindest die relais im richtigen muster ansteuert. jemand muesste mal:
 
-- sich mal um den webserverteil kümmern
-- funktionen schreiben die andere modi initialisieren
-- funktionen schreiben die spezifische http-requests handlen und an den server binden
 - ein interface machen das beim abfragen von / ausgegeben wird und dieses bei anfragen nach / ausgeben (siehe handleRoot())
 - das projekt anständig dokumentieren
+- beim aufrufen einer noch zu definierenden URI entsprechend normal_modus oder nacht_modus ausführen
+- dem stellvertretenden vorsitzenden seine vorstellung eines "partymodus" aus der nase ziehen
