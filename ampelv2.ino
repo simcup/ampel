@@ -5,13 +5,14 @@
 
 #ifndef STASSID
 #define STASSID "freieslabor"
-#define STAPSK "stehtaufmzettel"
+#define STAPSK "stehtaufdemzettel"
 #endif
 
 const char* ssid = STASSID;
 const char* passwort = STAPSK;
 
-const int ROTE_LAMPE = 12;
+//pindefinitionen
+const int ROTE_LAMPE = 12; 
 const int GELBE_LAMPE = 13;
 const int GRUENE_LAMPE = 14;
 
@@ -21,6 +22,7 @@ const int GRUENE_LAMPE = 14;
 typedef struct Zustand Zustand;
 
 struct Zustand {
+//
   bool led_rot;
   bool led_gelb;
   bool led_gruen;
@@ -31,14 +33,14 @@ struct Zustand {
 };
 
 ESP8266WebServer server(80);
-//zustände die die ampel annhemne kann
+
+//Zustände die die ampel annehmnen kann
 Zustand ampel_rot = {true, false, false, NULL, 4000};
 Zustand ampel_gelb = {false, true, false, NULL, 1500};
 Zustand ampel_gruen = {false, false, true, NULL, 4000};
 Zustand ampel_gelbrot = {true, true, false, NULL, 1500};
 Zustand ampel_aus = {false, false, false, NULL, 1000};
-
-//to be usefull
+//zu sein nuetzlich
 Zustand ampel_rotgruen = {true, false, true, NULL, 1000};
 Zustand ampel_gelbgruen = {false, true, true, NULL, 1000};
 Zustand ampel_rotgelbgruen = {true, true, true, NULL, 1000};
@@ -63,18 +65,23 @@ void normal_modus(){
 }
 
 void es_werde_licht(Zustand *zustand){
+  //debug zwecke
   Serial.printf("rot: %d, gelb: %d, gruen: %d\n",
 	zustand->led_rot,
 	zustand->led_gelb,
-	zustand->led_gruen); 
+	zustand->led_gruen);
+
+  //die pins dahin ziehen wo sie hinsollen
   digitalWrite(ROTE_LAMPE, !zustand->led_rot);
   digitalWrite(GELBE_LAMPE, !zustand->led_gelb);
   digitalWrite(GRUENE_LAMPE, !zustand->led_gruen);
+
+  //warten bis zur naechsten zustandsaenderung
   pause(zustand->dauer);
 }
 
 void pause(unsigned long ms) {
-  //totally not stolen
+  //Absolut nicht geklaut
   unsigned long wiederbringe_an = millis() + ms;
   while(millis() < wiederbringe_an) { yield(); }
 }
@@ -82,10 +89,11 @@ void pause(unsigned long ms) {
 void setup() {
   // Serial output mit baud rate 115200 initialisieren
   Serial.begin(115200);
+  //wlan verbindung aufbauen
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, passwort);
   Serial.println("");
-  
+  //warten bis verbindung erstellt wurde
   while(WiFi.status() != WL_CONNECTED){
 	delay(500);
 	Serial.print(".");
@@ -96,11 +104,17 @@ void setup() {
   Serial.println(ssid);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
-  
+
+  //funktionen an requests binden
+  server.on("/", handleRoot);
+  server.onNotFound(handleNotFound);
+	
   //pins initialisieren
   pinMode(ROTE_LAMPE, OUTPUT);
   pinMode(GELBE_LAMPE, OUTPUT);
   pinMode(GRUENE_LAMPE, OUTPUT);
+
+  //relay ist aktive low, deswegen pins high ziehen
   digitalWrite(ROTE_LAMPE, true);
   digitalWrite(GELBE_LAMPE, true);
   digitalWrite(GRUENE_LAMPE, true);
