@@ -12,7 +12,7 @@ const char* ssid = STASSID;
 const char* passwort = STAPSK;
 
 //pindefinitionen
-const int ROTE_LAMPE = 12; 
+const int ROTE_LAMPE = 12;
 const int GELBE_LAMPE = 13;
 const int GRUENE_LAMPE = 14;
 
@@ -22,7 +22,6 @@ const int GRUENE_LAMPE = 14;
 typedef struct Zustand Zustand;
 
 struct Zustand {
-//
   bool led_rot;
   bool led_gelb;
   bool led_gruen;
@@ -34,13 +33,12 @@ struct Zustand {
 
 ESP8266WebServer server(80);
 
-//Zustände die die ampel annehmnen kann
-Zustand ampel_rot = {true, false, false, NULL, 4000};
-Zustand ampel_gelb = {false, true, false, NULL, 1500};
-Zustand ampel_gruen = {false, false, true, NULL, 4000};
-Zustand ampel_gelbrot = {true, true, false, NULL, 1500};
+//Zustände die die ampel annehmnen kann, 3bit (rot,gelb,gruen) = 8 zustände
+Zustand ampel_rot = {true, false, false, NULL, 1000};
+Zustand ampel_gelb = {false, true, false, NULL, 1000};
+Zustand ampel_gruen = {false, false, true, NULL, 1000};
+Zustand ampel_gelbrot = {true, true, false, NULL, 1000};
 Zustand ampel_aus = {false, false, false, NULL, 1000};
-//zu sein nuetzlich
 Zustand ampel_rotgruen = {true, false, true, NULL, 1000};
 Zustand ampel_gelbgruen = {false, true, true, NULL, 1000};
 Zustand ampel_rotgelbgruen = {true, true, true, NULL, 1000};
@@ -48,28 +46,41 @@ Zustand ampel_rotgelbgruen = {true, true, true, NULL, 1000};
 Zustand *jetzt = &ampel_gruen;
 
 void handleRoot(){
-	server.send(200, "text/plain", "lorem ipsum");
+  server.send(200, "text/plain", "lorem ipsum");
 }
 
 void handleNotFound(){
-	server.send(404, "text/plain", "not found");
+  server.send(404, "text/plain", "not found");
 }
 
 void normal_modus(){
-	//zustände für normal mode initialisieren
-	
+
+  //abfolge für normal mode setzen
   ampel_rot.next = &ampel_gelbrot;
+  ampel_rot.dauer = 4000;
   ampel_gelb.next = &ampel_rot;
+  ampel_gelb.dauer = 1500;
   ampel_gruen.next = &ampel_gelb;
+  ampel_gruen.dauer = 4000;
   ampel_gelbrot.next = &ampel_gruen;
+  ampel_gelbrot.dauer = 1500;
+}
+
+void nacht_modus(){
+  //abfolge und dauer für nacht modus setzen
+  ampel_gelb.next = &ampel_aus;
+  ampel_gelb.dauer = 5000;
+  ampel_aus.next = &ampel_gelb;
+  ampel_aus.dauer = 5000;
+  jetzt = &ampel_gelb;
 }
 
 void es_werde_licht(Zustand *zustand){
-  //debug zwecke
+  //debug output
   Serial.printf("rot: %d, gelb: %d, gruen: %d\n",
-	  zustand->led_rot,
-	  zustand->led_gelb,
-  	zustand->led_gruen
+  zustand->led_rot,
+  zustand->led_gelb,
+  zustand->led_gruen
   );
 
   //die pins dahin ziehen wo sie hinsollen
@@ -84,7 +95,7 @@ void es_werde_licht(Zustand *zustand){
 void pause(unsigned long ms) {
   //Absolut nicht geklaut
   unsigned long wiederbringe_an = millis() + ms;
-  while(millis() < wiederbringe_an) { 
+  while(millis() < wiederbringe_an) {
     yield();
   }
 }
@@ -96,6 +107,7 @@ void setup() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, passwort);
   Serial.println("");
+
   //warten bis verbindung erstellt wurde
   while(WiFi.status() != WL_CONNECTED){
     delay(500);
@@ -113,8 +125,8 @@ void setup() {
 
   // starte Webserver (bind TCP)
   server.begin();
-  Serial.printf("Web server started on %s :", WiFi.localIP().toString().c_str());
-	
+  Serial.println("Web server started");
+
   //pins initialisieren
   pinMode(ROTE_LAMPE, OUTPUT);
   pinMode(GELBE_LAMPE, OUTPUT);
@@ -124,14 +136,15 @@ void setup() {
   digitalWrite(ROTE_LAMPE, true);
   digitalWrite(GELBE_LAMPE, true);
   digitalWrite(GRUENE_LAMPE, true);
+
   //zustände zuweisen
-  normal_modus();
+  nacht_modus();
 }
 
 void loop() {
 
-  server.handleClient(); // auf neuen HTTP-Request prüfen
-
+  // auf neuen HTTP-Request prüfen
+  server.handleClient();
   es_werde_licht(jetzt);
   jetzt = jetzt->next;
 }
