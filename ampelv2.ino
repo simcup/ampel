@@ -20,7 +20,6 @@ const int GRUENE_LAMPE = 14;
 //github.com/migu
 //github.com/orithena
 typedef struct Zustand Zustand;
-typedef 
 
 struct Zustand {
   bool led_rot;
@@ -59,14 +58,15 @@ void handleNacht(){
   server.send(200, "text/plain", "nachtmodus aktiv");
 }
 
-void handlenNormal(){
+void handleNormal(){
   normal_modus();
   server.send(200, "text/plain", "normalmodus aktiv");
 }
 
 void normal_modus(){
-
+  Serial.println("normal_modus aufgerufen");
   //abfolge für normal mode setzen
+  /*
   ampel_rot.next = &ampel_gelbrot;
   ampel_rot.dauer = 4000;
   ampel_gelb.next = &ampel_rot;
@@ -76,9 +76,11 @@ void normal_modus(){
   ampel_gelbrot.next = &ampel_gruen;
   ampel_gelbrot.dauer = 1500;
   jetzt = &ampel_rot;
+  */
 }
 
 void nacht_modus(){
+  Serial.println("nacht_modus aufgerufen");
   //abfolge und dauer für nacht modus setzen
   Zustand nacht_modus_1 = ampel_gelb;
   Zustand nacht_modus_2 = ampel_aus;
@@ -98,20 +100,26 @@ void nacht_modus(){
 }
 
 void strahl_modus(){
+  Serial.println("strahl_modus aufgerufen");
+  /*
   ampel_gruen.next = &ampel_gelb;
   ampel_gruen.dauer = 500;
   ampel_gelb.next = &ampel_rot;
   ampel_gelb.dauer = 500;
   ampel_rot.next = &ampel_gruen;
   ampel_gruen.dauer = 500;
+  */
 }
 
 void custom_modus(char* ablauf){
+  Serial.println("custom_modus aufgerufen");
   //ablauf auslesen, zustände in liste schreiben, liste ablaufen lassen
   //ggbf. dauer aus Zustand nehmen und in eigenen datentyp kapseln
   //problem für zukunfts simcup
+  Serial.println(ablauf);
 }
-void es_werde_licht(Zustand *zustand){
+
+ void es_werde_licht(Zustand *zustand){
   //debug output
   Serial.printf("rot: %d, gelb: %d, gruen: %d\n",
   zustand->led_rot,
@@ -159,7 +167,7 @@ void setup() {
   server.onNotFound(handleNotFound);
   server.on("/", handleRoot);
   server.on("/normal", handleNormal);
-  server.on("/night", handleNight);
+  server.on("/night", handleNacht);
 
   // starte Webserver (bind TCP)
   server.begin();
@@ -183,8 +191,10 @@ void loop() {
 
   // auf neuen HTTP-Request prüfen
   server.handleClient();
-  if(*jetzt != NULL){
+  if(jetzt != NULL){
     es_werde_licht(jetzt);
     jetzt = jetzt->next;
+  }else{
+    delay(500);
   }
 }
