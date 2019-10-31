@@ -4,3 +4,9 @@ Huston, wir haben ampel. auf dem ESP8266 im space ist eine funktionierende versi
 - das projekt anständig dokumentieren
 - beim aufrufen einer noch zu definierenden URI entsprechend normal_modus oder nacht_modus ausführen
 - dem stellvertretenden vorsitzenden seine vorstellung eines "partymodus" aus der nase ziehen
+
+
+
+
+
+alle 8 moeglichen zustände sind bereits definiert, zum modus schreiben gewüńschte menge Zustaende deklarieren und entsprechend ampel_* zuweisen, anschließend .next und .dauer setzen, verlinkte liste style. 
