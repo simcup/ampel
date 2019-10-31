@@ -66,7 +66,22 @@ void handleNormal(){
 void normal_modus(){
   Serial.println("normal_modus aufgerufen");
   //abfolge für normal mode setzen
+  Zustand normal1 = ampel_gruen;
+  Zustand normal2 = ampel_gelb;
+  Zustand normal3 = ampel_rot;
+  Zustand normal4 = ampel_gelbrot;
+  normal1.next = &normal2;
+  normal1.dauer = 4000;
+  normal2.next = &normal3;
+  normal2.dauer = 1500;
+  normal3.next = &normal4;
+  normal3.dauer = 4000;
+  normal4.next = &normal1;
+  normal1.dauer = 1500;
+  jetzt = &normal1;
+
   /*
+  deprecated
   ampel_rot.next = &ampel_gelbrot;
   ampel_rot.dauer = 4000;
   ampel_gelb.next = &ampel_rot;
@@ -101,7 +116,19 @@ void nacht_modus(){
 
 void strahl_modus(){
   Serial.println("strahl_modus aufgerufen");
+  Zustand strahl1 = ampel_gruen;
+  Zustand strahl2 = ampel_gelb;
+  Zustand strahl3 = ampel_rot;
+  strahl1.next = &strahl2;
+  strahl1.dauer = 300;
+  strahl2.next = &strahl3;
+  strahl2.dauer = 300;
+  strahl3.next = &strahl1;
+  strahl3.dauer = 300;
+  jetzt = &strahl1;
+  
   /*
+  deprecated
   ampel_gruen.next = &ampel_gelb;
   ampel_gruen.dauer = 500;
   ampel_gelb.next = &ampel_rot;
