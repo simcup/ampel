@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Ampeeeeeeeeeeeeeeeeeel</title>
+        
+        <style> 
+            #ampel{
+                background-color: #666;    
+            }
+        </style>
+    </head>
+    
+    <body>
+        <canvas id="ampel" width="140" height="300"></canvas>
+    </body>
+</html>
+
+<script>
+    function drawAmpel() {
+        var cAmpel = document.getElementById("ampel");
+        var ctx = cAmpel.getContext("2d");
+        ctx.stroke();
+
+        var cAmpelRed = document.getElementById("ampel");
+        var ctx = cAmpelRed.getContext("2d");
+        ctx.beginPath();
+        ctx.arc(70, 55, 45, 0, 2 * Math.PI);
+        ctx.fillStyle = "red";
+        ctx.fill();
+
+        var cAmpelYellow = document.getElementById("ampel");
+        var ctx = cAmpelYellow.getContext("2d");
+        ctx.beginPath();
+        ctx.arc(70, 150, 45, 0, 2 * Math.PI);
+        ctx.fillStyle = "yellow";
+        ctx.fill();
+
+        var cAmpelGreen = document.getElementById("ampel");
+        var ctx = cAmpelGreen.getContext("2d");
+        ctx.beginPath();
+        ctx.arc(70, 245, 45, 0, 2 * Math.PI);
+        ctx.fillStyle = "green";
+        ctx.fill();
+    }
+
+    drawAmpel();
+</script>
