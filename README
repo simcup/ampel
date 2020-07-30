@@ -1,12 +1,51 @@
 Huston, wir haben ampel. auf dem ESP8266 im space ist eine funktionierende version die zumindest die relais im richtigen muster ansteuert. jemand muesste mal:
 
-- ein interface machen das beim abfragen von / ausgegeben wird und dieses bei anfragen nach / ausgeben (siehe handleRoot())
 - das projekt anständig dokumentieren
-- beim aufrufen einer noch zu definierenden URI entsprechend normal_modus oder nacht_modus ausführen
-- dem stellvertretenden vorsitzenden seine vorstellung eines "partymodus" aus der nase ziehen
 
 
+versuchen wir das mal:
+
+benoetigte hardware: ESP8266, active low relay (solid state relay empfohlen, die erfahrung zeigt klicken meschanischer relais nervt auf dauer)
+
+das ESP loggt sich automagisch ins WLAN ein, einfach die credentials in der psk.h entsprechend aendern. im anschluss wird ueber USB die zugewiesene IP mit 115200 baud ausgegeben.
+
+http requests werden erst beim naechsten umschalten verarbeitet, bei custom beleuchtung nach 500ms
+
+der webserver kann 6 vershiedene http requests verarbeiten: 
+
+- GET /
+
+200 response: wenn sie dies lesen hat noch niemand ein interface geschrieben
+
+- GET /normal
+
+10s gruen, 2.5s gelb, 10s rot, 2.5s gelbrot
+
+200 response: normalmodus aktiv
+
+- GET /night
+
+1s gelb, 1s aus
+
+200 response: nachtmodus aktiv
+
+- GET /stop
+
+1s aus
+
+200 response: stopped
+
+- GET /custom
+
+form mit 3 radio inputs fuer rot, gelb und gruen
+
+200 response: s.o.
+
+- POST /custom
+
+erwartet die parameter "red", "yellow", "green" mit je einem value 0 oder 1. schaltet die entsprechenden lampen
+
+200 response: ok
 
 
-
-alle 8 moeglichen zustände sind bereits definiert, zum modus schreiben gewüńschte menge Zustaende deklarieren und entsprechend ampel_* zuweisen, anschließend .next und .dauer setzen, verlinkte liste style. 
+alle anderen requests werden 404 not found beantwortet
