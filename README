@@ -7,7 +7,12 @@ versuchen wir das mal:
 
 benoetigte hardware: ESP8266, active low relay (solid state relay empfohlen, die erfahrung zeigt klicken meschanischer relais nervt auf dauer)
 
-das ESP loggt sich automagisch ins WLAN ein, einfach die credentials in der psk.h entsprechend aendern. im anschluss wird ueber USB die zugewiesene IP mit 115200 baud ausgegeben.
+das ESP loggt sich automagisch ins WLAN ein, einfach die credentials als 
+
+>#define STASSID = ssid
+>#define STAPSK = password
+
+in eine psk.h schreiben. im anschluss wird ueber USB die zugewiesene IP mit 115200 baud ausgegeben.
 
 http requests werden erst beim naechsten umschalten verarbeitet, bei custom beleuchtung nach 500ms
 
